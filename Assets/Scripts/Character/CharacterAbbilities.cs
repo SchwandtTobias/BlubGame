@@ -41,6 +41,8 @@ public class CharacterAbbilities : MonoBehaviour
 
     private float m_DamageIndicator = 0.0f;
 
+    private float m_ManaIndicator = 0.0f;
+
     private Rigidbody m_RigidBody;
 
     void Start ()
@@ -87,6 +89,7 @@ public class CharacterAbbilities : MonoBehaviour
         if (_Other.tag == "Block")
         {
             m_DamageIndicator = _Other.GetComponent<GeneralBlock>().Damage;
+            m_ManaIndicator   = _Other.GetComponent<GeneralBlock>().Mana;
 
             switch (_Other.GetComponent<GeneralBlock>().Type)
             {
@@ -126,6 +129,22 @@ public class CharacterAbbilities : MonoBehaviour
     public void IncreaseJump()
     {
         m_NumberOfJumps++;
+    }
+
+    public float HealthInPercentage
+    {
+        get
+        {
+            return m_Health / 100.0f;
+        }
+    }
+
+    public float ManaInPercentage
+    {
+        get
+        {
+            return m_Mana / 100.0f;
+        }
     }
 
     public float ReduceFactor
