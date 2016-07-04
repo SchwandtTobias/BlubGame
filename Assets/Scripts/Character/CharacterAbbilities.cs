@@ -8,7 +8,7 @@ public class CharacterAbbilities : MonoBehaviour
         NORMAL,
         INAIR,
         BURN,
-        GRAVITY,
+        FLOAT,
         FREEZE,
         POISON,
     }
@@ -84,21 +84,30 @@ public class CharacterAbbilities : MonoBehaviour
 
     void OnTriggerEnter(Collider _Other)
     {
-        if (_Other.tag == "Gravity")
+        if (_Other.tag == "Block")
         {
-            m_Activity = EActivities.GRAVITY;
-        }
-        else if (_Other.tag == "Fire")
-        {
-            m_Activity = EActivities.BURN;
+            m_DamageIndicator = _Other.GetComponent<GeneralBlock>().Damage;
 
-            m_DamageIndicator = _Other.GetComponent<FireBlock>().Damage;
+            switch (_Other.GetComponent<GeneralBlock>().Type)
+            {
+                case GeneralBlock.ETypes.GRAVITY:
+                {
+                    m_Activity = EActivities.FLOAT;
+                }
+                break;
+
+                case GeneralBlock.ETypes.FIRE:
+                {
+                    m_Activity = EActivities.BURN;
+                }
+                break;
+            } 
         }
     }
 
     void OnTriggerExit(Collider _Other)
     {
-        if (_Other.tag == "Gravity" || _Other.tag == "Fire")
+        if (_Other.tag == "Block")
         {
             m_Activity = EActivities.NORMAL;
         }

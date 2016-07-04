@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GravityBlock : MonoBehaviour
+public class GravityBlock : GeneralBlock
 {
 	void Start ()
     {
