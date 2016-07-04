@@ -39,6 +39,8 @@ public class CharacterAbbilities : MonoBehaviour
 
     private bool m_CanJump = false;
 
+    private float m_DamageIndicator = 0.0f;
+
     private Rigidbody m_RigidBody;
 
     void Start ()
@@ -48,6 +50,13 @@ public class CharacterAbbilities : MonoBehaviour
 
 	void Update ()
     {
+        // Damage
+        if (m_Activity == EActivities.BURN)
+        {
+            m_Health -= m_DamageIndicator * Time.deltaTime;
+        }
+
+        // Timing and air behaviour
         if (Mathf.Approximately(m_RigidBody.velocity.y, 0.0f))
         {
             m_NumberOfJumps = 0;
@@ -70,6 +79,28 @@ public class CharacterAbbilities : MonoBehaviour
         if (m_NumberOfJumps < m_MaxNumberOfJumps && m_TimeScinceLastJump > m_TimeBetweenJumps)
         {
             m_CanJump = true;
+        }
+    }
+
+    void OnTriggerEnter(Collider _Other)
+    {
+        if (_Other.tag == "Gravity")
+        {
+            m_Activity = EActivities.GRAVITY;
+        }
+        else if (_Other.tag == "Fire")
+        {
+            m_Activity = EActivities.BURN;
+
+            m_DamageIndicator = _Other.GetComponent<FireBlock>().Damage;
+        }
+    }
+
+    void OnTriggerExit(Collider _Other)
+    {
+        if (_Other.tag == "Gravity" || _Other.tag == "Fire")
+        {
+            m_Activity = EActivities.NORMAL;
         }
     }
 
