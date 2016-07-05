@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class AbbilitiesInterface : MonoBehaviour
 {
-	public Texture[] m_ActivitySkins = new Texture[CharacterAbbilities.s_NumberOfActivities];
+	public Sprite[] m_ActivitySkins = new Sprite[CharacterAbbilities.s_NumberOfActivities];
     public CharacterAbbilities m_Abbilities;
     public Transform m_HealthBar;
     public Transform m_ManaBar;
-	public GameObject m_Avatar;
+	public Image m_Avatar;
+
+
 
     void Start ()
     {
@@ -21,7 +24,9 @@ public class AbbilitiesInterface : MonoBehaviour
 
         m_ManaBar.localScale = new Vector3(Mathf.Max(0.0f, m_Abbilities.ManaInPercentage), 1.0f, 1.0f);
 
-		// Change avatar
+        // Change avatar
+        int SkinID = (int)m_Abbilities.Activity;
 
+        m_Avatar.sprite = m_ActivitySkins[SkinID];
     }
 }

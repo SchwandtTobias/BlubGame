@@ -50,20 +50,24 @@ public class CharacterAbbilities : MonoBehaviour
 
     private Rigidbody m_RigidBody;
 
+    private Renderer m_Renderer;
+
     void Start ()
     {
         m_RigidBody = GetComponent<Rigidbody>();
+
+        m_Renderer = GetComponent<Renderer>();
     }
 
 	void Update ()
     {
         // Damage
-        if (m_Activity == EActivities.BURN)
+        if (Activity == EActivities.BURN)
         {
             m_Health -= m_DamageIndicator * Time.deltaTime;
         }
 
-        // Air behaviour
+        // Air behavior
 		if (Input.GetButton("Jump") && m_CanJump)
 		{
 			m_TimeOnGround = 0.0f;
@@ -83,7 +87,7 @@ public class CharacterAbbilities : MonoBehaviour
 
             m_CanJump = true;
 
-			if (m_Activity == EActivities.INAIR) m_Activity = EActivities.NORMAL;
+			if (Activity == EActivities.INAIR) Activity = EActivities.NORMAL;
         }
         else
         {
@@ -93,7 +97,7 @@ public class CharacterAbbilities : MonoBehaviour
 
             m_CanJump = false;
 
-			if (m_Activity == EActivities.NORMAL) m_Activity = EActivities.INAIR;
+			if (Activity == EActivities.NORMAL) Activity = EActivities.INAIR;
         }
 
         if (m_NumberOfJumps < m_MaxNumberOfJumps && m_TimeScinceLastJump > m_TimeBetweenJumps)
@@ -118,13 +122,13 @@ public class CharacterAbbilities : MonoBehaviour
             {
                 case GeneralBlock.ETypes.GRAVITY:
                 {
-                    m_Activity = EActivities.FLOAT;
+                    Activity = EActivities.FLOAT;
                 }
                 break;
 
                 case GeneralBlock.ETypes.FIRE:
                 {
-                    m_Activity = EActivities.BURN;
+                    Activity = EActivities.BURN;
                 }
                 break;
             } 
@@ -133,38 +137,56 @@ public class CharacterAbbilities : MonoBehaviour
 
     void OnTriggerExit(Collider _Other)
     {
-		// Reset activity
         if (_Other.tag == "Block")
         {
-            m_Activity = EActivities.NORMAL;
+            Activity = EActivities.NORMAL;
         }
     }
-		
-	/*
-	void OnCollisionEnter(Collider _Other)
-	{
-		if (_Other.tag == "Block") 
-		{
-			// Depending on block type we have to change our activity
-			switch (_Other.GetComponent<GeneralBlock> ().Type) 
-			{
-				case GeneralBlock.ETypes.ICE:
-				{
-					m_Activity = EActivities.FREEZE;
-				}
-				break;
-			} 
-		}
-	}
 
-	void OnCollisionExit(Collider _Other)
+    void OnCollisionEnter(Collision _Other)
 	{
-		if (_Other.tag == "Block") 
-		{
-			m_Activity = EActivities.NORMAL;
-		}
-	}
-	*/
+        GameObject GameObject = _Other.gameObject;
+
+        if (GameObject.tag == "Block")
+        {
+            // Every collision with a block means a new jump is possible
+            m_NumberOfJumps = 0;
+
+            // Get default values from block
+            m_DamageIndicator = GameObject.GetComponent<GeneralBlock>().Damage;
+            m_ManaIndicator   = GameObject.GetComponent<GeneralBlock>().Mana;
+
+            // Depending on block type we have to change our activity
+            switch (GameObject.GetComponent<GeneralBlock>().Type)
+            {
+                case GeneralBlock.ETypes.NORMAL:
+                {
+                    Activity = EActivities.NORMAL;
+                }
+                break;
+
+                case GeneralBlock.ETypes.ICE:
+                {
+                    Activity = EActivities.FREEZE;
+                }
+                break;
+            }
+        }
+    }
+
+    public EActivities Activity
+    {
+        get
+        {
+            return m_Activity;
+        }
+        set
+        {
+            m_Activity = value;
+
+            m_Renderer.material.mainTexture = m_ActivitySkins[(int)m_Activity];
+        }
+    }
 
     public float HealthInPercentage
     {
