@@ -17,12 +17,6 @@ public class CharacterMovement : MonoBehaviour
         if (Input.GetButton("Jump") && m_Abbilities.CanJump)
         {
             m_RigidBody.velocity = new Vector3(m_RigidBody.velocity.x, m_Abbilities.ReduceFactor * m_Abbilities.JumpSpeed, m_RigidBody.velocity.z);
-
-            m_Abbilities.ResetTimeOnGround();
-
-            m_Abbilities.ResetTimeSinceLastJump();
-
-            m_Abbilities.IncreaseJump();
         }
 
         if (Input.GetButton("Move"))
