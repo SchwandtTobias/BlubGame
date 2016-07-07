@@ -61,11 +61,9 @@ public class CharacterAbbilities : MonoBehaviour
 
 	void Update ()
     {
-        // Damage
-        if (Activity == EActivities.BURN)
-        {
-            m_Health -= m_DamageIndicator * Time.deltaTime;
-        }
+        // Damage + Mana
+        m_Health -= m_DamageIndicator * Time.deltaTime;
+		m_Mana -= m_ManaIndicator * Time.deltaTime;
 
         // Air behavior
 		if (Input.GetButton("Jump") && m_CanJump)
@@ -170,6 +168,12 @@ public class CharacterAbbilities : MonoBehaviour
                     Activity = EActivities.FREEZE;
                 }
                 break;
+
+				case GeneralBlock.ETypes.POISON:
+				{
+					Activity = EActivities.POISON;
+				}
+				break;
             }
         }
     }
