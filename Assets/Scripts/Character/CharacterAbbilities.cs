@@ -137,6 +137,9 @@ public class CharacterAbbilities : MonoBehaviour
     {
         if (_Other.tag == "Block")
         {
+            m_DamageIndicator = 0;
+            m_ManaIndicator   = 0;
+
             Activity = EActivities.NORMAL;
         }
     }
@@ -147,8 +150,11 @@ public class CharacterAbbilities : MonoBehaviour
 
         if (GameObject.tag == "Block")
         {
-            // Every collision with a block means a new jump is possible
-            m_NumberOfJumps = 0;
+            // Every collision with a block means a new jump is possible if we collide with the top
+            if (_Other.contacts.Length > 0 && _Other.contacts[0].normal.y > 0.0f)
+            {
+                m_NumberOfJumps = 0;
+            }
 
             // Get default values from block
             m_DamageIndicator = GameObject.GetComponent<GeneralBlock>().Damage;
