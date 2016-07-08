@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GeneralBlock : MonoBehaviour
 {
+    public static int s_NumberOfBlocks = 5;
+
     public enum ETypes
     {
         NORMAL,
